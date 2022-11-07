@@ -16,11 +16,12 @@ interface CoinInterface {
 
 // Styeld Components
 const Container = styled.div`
-  margin-top: 12vh;
+  margin-top: 11vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 `;
 
 const Title = styled.h1`
@@ -33,11 +34,12 @@ const Title = styled.h1`
 `;
 
 const ListContainer = styled.ul`
+  width: 80%;
   display: flex;
-  flex-flow: row wrap;
   justify-content: center;
-  overflow: hidden;
-  padding: 0 10%;
+  align-items: center;
+  flex-flow: row wrap;
+  margin: 0 auto;
 `;
 
 const CoinList = styled.li`
@@ -85,8 +87,8 @@ function Market() {
       const response = await fetch("https://api.coinpaprika.com/v1/coins");
       const json = await response.json();
       setCoins(json.slice(0, 100));
+      setLoaded(true);
     })();
-    setLoaded(true);
   }, []);
   return (
     <Container>

@@ -13,12 +13,7 @@ const Container = styled.div`
 `;
 
 function Loading() {
-  return (
-    <Container>
-      <i className="fa-duotone fa-loader"></i>
-      Loading...
-    </Container>
-  );
+  return <Container>Loading...</Container>;
 }
 
 export default Loading;

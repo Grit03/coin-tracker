@@ -13,6 +13,9 @@ const GlobalStyle = createGlobalStyle`
     -moz-user-drag: none;
     -o-user-drag: none;
   }
+  html{
+    height: 100%;
+  }
   body{
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     background-color: ${(props) => props.theme.bgColor};
@@ -20,7 +23,8 @@ const GlobalStyle = createGlobalStyle`
     -webkit-user-select:none;
     -moz-user-select:none;
     -ms-user-select:none;
-    user-select:none
+    user-select: none;
+    height: 100%;
   }
   button{
     background: inherit;
@@ -36,9 +40,9 @@ const GlobalStyle = createGlobalStyle`
     color: inherit;
   }
   #root{
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
   }
   

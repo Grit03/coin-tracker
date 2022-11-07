@@ -12,9 +12,9 @@ const floating = keyframes`
 `;
 
 const Container = styled.section`
-  margin-top: 12vh;
-  height: 77vh;
   width: 100%;
+  height: 80%;
+  margin-top: 11vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,7 +74,7 @@ function Home() {
         <Title>
           암호화폐를 구매하기 전에,
           <br />
-          자세히 시세를 조회해보세요!
+          먼저 자세한 시세를 조회해보세요!
           <Btn onClick={onClick}>시세 조회 &rarr;</Btn>
         </Title>
         <Img src="/homepage.png" />

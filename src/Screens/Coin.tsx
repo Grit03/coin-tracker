@@ -6,7 +6,7 @@ import { priceWithComma } from "../Functions/numberFunctions";
 import { IInfodata, IPriceData } from "../types/apiDataTypes";
 // styled-components
 const Container = styled.section`
-  margin-top: 12vh;
+  margin-top: 11vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

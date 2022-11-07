@@ -4,7 +4,7 @@ import styled from "styled-components";
 const NavigaterHeader = styled.header`
   width: 100%;
   min-width: 300px;
-  height: 12vh;
+  height: 11vh;
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.textColor};
