@@ -89,7 +89,7 @@ function Market() {
                 <Icon
                   key={`${coin.id}-icon`}
                   alt="coin-icon"
-                  src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                  src={`https://static.coinpaprika.com/coin/${coin.id}/logo.png`}
                 />
                 <div key={coin.name}>
                   {coin.name} <br />

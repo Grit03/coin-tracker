@@ -142,7 +142,7 @@ function Coin() {
           ? "Loading..."
           : `${coinInfo?.name} (${coinInfo?.symbol})`}
       </Title>
-      {priceLoading ? (
+      {priceLoading || infoLoading ? (
         <Loading />
       ) : (
         <>
@@ -150,7 +150,7 @@ function Coin() {
             <Text>{`$${priceWithComma(
               coinPrice?.quotes.USD.price.toFixed(2)
             )}`}</Text>
-            <Text colorByNum={coinPrice!.quotes.USD.percent_change_24h}>
+            <Text colorByNum={coinPrice?.quotes.USD.percent_change_24h}>
               {coinPrice!.quotes.USD.percent_change_24h > 0.05 ? (
                 <i className={"fa-solid fa-caret-up"}></i>
               ) : (
@@ -194,7 +194,7 @@ function Coin() {
           </Tabs>
         </>
       )}
-      <Outlet />
+      <Outlet context={{ coinId }} />
     </Container>
   );
 }
