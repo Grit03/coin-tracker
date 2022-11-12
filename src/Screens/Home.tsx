@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
 const floating = keyframes`
@@ -39,7 +38,7 @@ const Title = styled.header`
 const Img = styled.img`
   width: 400px;
   min-width: 150px;
-  animation: ${floating} 2s 1s infinite ease-in-out alternate;
+  animation: ${floating} 1.8s infinite ease-in-out alternate;
 `;
 
 const Btn = styled.button`

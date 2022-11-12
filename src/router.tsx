@@ -3,6 +3,8 @@ import Root from "./Root";
 import Home from "./Screens/Home";
 import Coin from "./Screens/Coin";
 import Market from "./Screens/Market";
+import Chart from "./Components/Chart";
+import Price from "./Components/Price";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,16 @@ const router = createBrowserRouter([
       {
         path: ":coinId",
         element: <Coin />,
+        children: [
+          {
+            path: "chart",
+            element: <Chart />,
+          },
+          {
+            path: "price",
+            element: <Price />,
+          },
+        ],
       },
     ],
   },

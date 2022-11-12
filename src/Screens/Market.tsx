@@ -1,18 +1,9 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Loading from "../Components/Loading";
-
-// Interfaces
-interface CoinInterface {
-  id: string;
-  name: string;
-  symbol: string;
-  rank: number;
-  is_new: boolean;
-  is_active: boolean;
-  type: string;
-}
+import { getCoins } from "../Functions/api";
+import { CoinInterface } from "../types/apiDataTypes";
 
 // Styeld Components
 const Container = styled.div`
@@ -64,6 +55,7 @@ const CoinList = styled.li`
     font-size: 1.2rem;
     font-weight: 500;
     line-height: 1.5;
+    text-transform: uppercase;
   }
   &:hover {
     background-color: ${(props) => props.theme.containerFocusColor};
@@ -80,38 +72,33 @@ const Icon = styled.img`
 `;
 
 function Market() {
-  const [coins, setCoins] = useState<CoinInterface[]>([]);
-  const [loaded, setLoaded] = useState<boolean>(false);
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("https://api.coinpaprika.com/v1/coins");
-      const json = await response.json();
-      setCoins(json.slice(0, 100));
-      setLoaded(true);
-    })();
-  }, []);
+  const { isLoading, data } = useQuery<CoinInterface[]>({
+    queryKey: ["allCoins"],
+    queryFn: getCoins,
+  });
   return (
     <Container>
       <Title>코인 시세 확인 💰</Title>
-      {loaded ? (
+      {isLoading ? (
+        <Loading />
+      ) : (
         <ListContainer>
-          {coins.map((coin) => (
-            <Link to={`/${coin.id}`}>
+          {data!.slice(0, 100).map((coin) => (
+            <Link to={`/${coin.id}`} state={coin} key={coin.id}>
               <CoinList key={coin.id}>
                 <Icon
+                  key={`${coin.id}-icon`}
                   alt="coin-icon"
                   src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
                 />
-                <div>
-                  {coin.name.toUpperCase()} <br />
+                <div key={coin.name}>
+                  {coin.name} <br />
                   &rarr;
                 </div>
               </CoinList>
             </Link>
           ))}
         </ListContainer>
-      ) : (
-        <Loading />
       )}
     </Container>
   );

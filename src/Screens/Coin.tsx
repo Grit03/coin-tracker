@@ -1,9 +1,22 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useMatch,
+  useParams,
+} from "react-router-dom";
 import styled from "styled-components";
 import Loading from "../Components/Loading";
-import { priceWithComma } from "../Functions/numberFunctions";
+import { getCoinInfo, getCoinPrice } from "../Functions/api";
+import { priceWithComma } from "../Functions/dataPresenters";
 import { IInfodata, IPriceData } from "../types/apiDataTypes";
+
+// interfaces
+interface IColorByNum {
+  colorByNum?: number;
+}
+
 // styled-components
 const Container = styled.section`
   margin-top: 11vh;
@@ -24,9 +37,15 @@ const Discription = styled.p`
   width: 50%;
 `;
 
-const Text = styled.div`
+const Text = styled.div<IColorByNum>`
   text-align: center;
-  color: ${(props) => props.color};
+  color: ${(props) => {
+    if (props.colorByNum! > 0.05) {
+      return "rgb(14, 203, 129)";
+    } else {
+      return "#CF304A";
+    }
+  }};
   font-size: 1.2rem;
   font-weight: 600;
 `;
@@ -74,83 +93,108 @@ const Title = styled.header`
   margin-bottom: 3vh;
 `;
 
-const minusColor: string = "#CF304A";
-const plusColor: string = "rgb(14, 203, 129)";
+const Tabs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 25px 0px;
+  width: 55%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  min-width: 300px;
+`;
+
+const Tab = styled.span<{ isActive: boolean }>`
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 10px;
+  color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.textColor};
+  background-color: ${(props) =>
+    props.isActive ? props.theme.containerColor : "rgba(0, 0, 0, 0.5)"};
+  a {
+    padding: 10px 0px;
+    display: block;
+  }
+`;
 
 function Coin() {
-  const [loaded, setLoaded] = useState(false);
   const { coinId } = useParams();
-  const [info, setInfo] = useState<IInfodata>();
-  const [priceInfo, setPriceInfo] = useState<IPriceData>();
-  const [colorByNum, setColorByNum] = useState<string>("inherit");
-  const [priceIcon, setPriceIcon] = useState<string>("fa-dash");
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-      setInfo(infoData);
-      setPriceInfo(priceData);
-      const price = priceData?.quotes.USD.percent_change_24h;
-      if (typeof price == "number") {
-        if (price > 0.05) {
-          setColorByNum(plusColor);
-          setPriceIcon("fa-caret-up");
-        } else {
-          setColorByNum(minusColor);
-          setPriceIcon("fa-caret-down");
-        }
-        setLoaded(true);
-      }
-    })();
-  }, [coinId]);
+  const { state } = useLocation();
+  const priceMatch = useMatch("/:coinId/price");
+  const chartMatch = useMatch("/:coinId/chart");
+  const { isLoading: infoLoading, data: coinInfo } = useQuery<IInfodata>({
+    queryKey: [coinId, "coin-info"],
+    queryFn: () => getCoinInfo(coinId!),
+  });
+  const { isLoading: priceLoading, data: coinPrice } = useQuery<IPriceData>({
+    queryKey: [coinId, "coin-price"],
+    queryFn: () => getCoinPrice(coinId!),
+  });
 
   return (
     <Container>
-      <Title>{`${info?.name} (${info?.symbol})`}</Title>
-      {loaded ? (
+      <Title>
+        {state
+          ? `${state.name} (${state.symbol})`
+          : infoLoading
+          ? "Loading..."
+          : `${coinInfo?.name} (${coinInfo?.symbol})`}
+      </Title>
+      {priceLoading ? (
+        <Loading />
+      ) : (
         <>
           <Content>
             <Text>{`$${priceWithComma(
-              priceInfo?.quotes.USD.price.toFixed(2)
+              coinPrice?.quotes.USD.price.toFixed(2)
             )}`}</Text>
-            <Text color={colorByNum}>
-              <i className={`fa-solid ${priceIcon}`}></i>
-              {` ${priceInfo?.quotes.USD.percent_change_24h}%`}
+            <Text colorByNum={coinPrice!.quotes.USD.percent_change_24h}>
+              {coinPrice!.quotes.USD.percent_change_24h > 0.05 ? (
+                <i className={"fa-solid fa-caret-up"}></i>
+              ) : (
+                <i className={"fa-solid fa-caret-down"}></i>
+              )}
+              {` ${coinPrice?.quotes.USD.percent_change_24h}%`}
             </Text>
           </Content>
           <Overview>
             <OverviewItem>
               <span>순위</span>
-              <span>{info?.rank}</span>
+              <span>{coinInfo?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>공급량</span>
               <span>{`$ ${priceWithComma(
-                priceInfo?.total_supply.toString()
+                coinPrice?.total_supply.toString()
               )}`}</span>
             </OverviewItem>
             <OverviewItem>
               <span>시가 총액</span>
               <span>
                 {`$ ${priceWithComma(
-                  priceInfo?.quotes.USD.market_cap.toString()
+                  coinPrice?.quotes.USD.market_cap.toString()
                 )}`}
               </span>
             </OverviewItem>
           </Overview>
           <Discription>
-            {info?.description === ""
+            {coinInfo?.description === ""
               ? "자세한 설명이 존재하지 않는 암호화폐입니다."
-              : info?.description}
+              : coinInfo?.description}
           </Discription>
+          <Tabs>
+            <Tab isActive={chartMatch !== null}>
+              <Link to={`/${coinId}/chart`}>Chart</Link>
+            </Tab>
+            <Tab isActive={priceMatch !== null}>
+              <Link to={`/${coinId}/price`}>Price</Link>
+            </Tab>
+          </Tabs>
         </>
-      ) : (
-        <Loading />
       )}
+      <Outlet />
     </Container>
   );
 }

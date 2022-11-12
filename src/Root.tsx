@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
@@ -48,12 +49,16 @@ const GlobalStyle = createGlobalStyle`
   
 `;
 
+const queryClient = new QueryClient();
+
 function Root() {
   return (
     <>
       <GlobalStyle />
-      <Header />
-      <Outlet />
+      <QueryClientProvider client={queryClient}>
+        <Header />
+        <Outlet />
+      </QueryClientProvider>
     </>
   );
 }
