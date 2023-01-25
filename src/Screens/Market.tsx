@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Loading from "../Components/Loading";
 import { getCoins } from "../Functions/api";
-import { CoinInterface } from "../types/apiDataTypes";
+import { CoinInterface } from "../types/interfaces";
 
 // Styeld Components
 const Container = styled.div`

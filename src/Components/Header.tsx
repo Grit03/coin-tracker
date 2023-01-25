@@ -56,7 +56,7 @@ function Header() {
   return (
     <NavigaterHeader>
       <Link to={"/"}>
-        <Img src="/favicon.ico" />
+        <Img src="favicon.ico" />
         <Logo>COIN TRACKER</Logo>
       </Link>
       <ul>

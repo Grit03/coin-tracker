@@ -102,3 +102,11 @@ export interface IOhlcv {
   volume: string;
   market_cap: number;
 }
+
+export interface IOutletCtx {
+  coinId: string;
+}
+
+export interface IColorByNum {
+  colorByNum?: number;
+}

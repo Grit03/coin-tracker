@@ -1,10 +1,15 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import Header from "./Components/Header";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ThemeProvider } from "styled-components";
+import { lightTheme, darkTheme } from "./theme";
+import { darkState } from "./atoms";
+import { useRecoilValue } from "recoil";
+import ModeToggle from "./Components/ModeToggle";
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/variable/pretendardvariable-dynamic-subset.css");
   ${reset}
   *{
@@ -49,17 +54,16 @@ const GlobalStyle = createGlobalStyle`
   
 `;
 
-const queryClient = new QueryClient();
-
 function Root() {
+  const isDark = useRecoilValue(darkState);
   return (
-    <>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
       <GlobalStyle />
-      <QueryClientProvider client={queryClient}>
-        <Header />
-        <Outlet />
-      </QueryClientProvider>
-    </>
+      <Header />
+      <Outlet />
+      <ModeToggle />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </ThemeProvider>
   );
 }
 

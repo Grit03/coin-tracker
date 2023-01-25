@@ -76,7 +76,7 @@ function Home() {
           먼저 자세한 시세를 조회해보세요!
           <Btn onClick={onClick}>시세 조회 &rarr;</Btn>
         </Title>
-        <Img src="/homepage.png" />
+        <Img src="/coin-tracker/homepage.png" />
       </Container>
     </>
   );

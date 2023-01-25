@@ -10,12 +10,10 @@ import styled from "styled-components";
 import Loading from "../Components/Loading";
 import { getCoinInfo, getCoinPrice } from "../Functions/api";
 import { priceWithComma } from "../Functions/dataPresenters";
-import { IInfodata, IPriceData } from "../types/apiDataTypes";
-
-// interfaces
-interface IColorByNum {
-  colorByNum?: number;
-}
+import { IInfodata, IPriceData } from "../types/interfaces";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import { IColorByNum } from "../types/interfaces";
 
 // styled-components
 const Container = styled.section`
@@ -76,7 +74,7 @@ const OverviewItem = styled.div`
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.overviewBgColor};
   padding: 15px 25px;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -96,9 +94,9 @@ const Title = styled.header`
 const Tabs = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
   margin: 25px 0px;
   width: 55%;
-  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   min-width: 300px;
 `;
@@ -109,10 +107,12 @@ const Tab = styled.span<{ isActive: boolean }>`
   font-size: 12px;
   font-weight: 700;
   border-radius: 10px;
+  border: solid 2px
+    ${(props) =>
+      props.isActive ? props.theme.accentColor : props.theme.overviewBgColor};
   color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
-  background-color: ${(props) =>
-    props.isActive ? props.theme.containerColor : "rgba(0, 0, 0, 0.5)"};
+  background-color: ${(props) => props.theme.overviewBgColor};
   a {
     padding: 10px 0px;
     display: block;
@@ -147,14 +147,16 @@ function Coin() {
       ) : (
         <>
           <Content>
-            <Text>{`$${priceWithComma(
+            <Text
+              colorByNum={coinPrice?.quotes.USD.percent_change_24h}
+            >{`$${priceWithComma(
               coinPrice?.quotes.USD.price.toFixed(2)
             )}`}</Text>
             <Text colorByNum={coinPrice?.quotes.USD.percent_change_24h}>
               {coinPrice!.quotes.USD.percent_change_24h > 0.05 ? (
-                <i className={"fa-solid fa-caret-up"}></i>
+                <FontAwesomeIcon icon={faCaretUp} />
               ) : (
-                <i className={"fa-solid fa-caret-down"}></i>
+                <FontAwesomeIcon icon={faCaretDown} />
               )}
               {` ${coinPrice?.quotes.USD.percent_change_24h}%`}
             </Text>

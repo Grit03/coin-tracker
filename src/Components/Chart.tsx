@@ -1,26 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
 import { getOhlcvByCoin } from "../Functions/api";
-import { IOhlcv } from "../types/apiDataTypes";
+import { IOhlcv, IOutletCtx } from "../types/interfaces";
 import Loading from "../Components/Loading";
 import ApexChart from "react-apexcharts";
-import styled from "styled-components";
-
-// interfaces
-interface IOutletCtx {
-  coinId: string;
-}
+import { darkState } from "../atoms";
+import { useRecoilValue } from "recoil";
 
 function Chart() {
   const { coinId } = useOutletContext<IOutletCtx>();
-  const { isLoading, data } = useQuery<IOhlcv[]>({
+  const { isLoading, isError, data } = useQuery<IOhlcv[]>({
     queryKey: [coinId, "ohlcv"],
     queryFn: () => getOhlcvByCoin(coinId),
   });
+  const isDark = useRecoilValue(darkState);
   return (
     <>
       {isLoading ? (
         <Loading />
+      ) : isError ? (
+        <span>Chart Info Not Found</span>
       ) : (
         <ApexChart
           series={[
@@ -44,7 +43,7 @@ function Chart() {
               background: "transparent",
             },
             theme: {
-              mode: "dark",
+              mode: isDark ? "dark" : "light",
             },
             xaxis: {
               type: "datetime",
@@ -55,7 +54,7 @@ function Chart() {
               },
             },
           }}
-          width={700}
+          width={510}
           type="candlestick"
         />
       )}

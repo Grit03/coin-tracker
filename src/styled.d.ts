@@ -9,5 +9,6 @@ declare module "styled-components" {
     accentColor: string;
     containerColor: string;
     containerFocusColor: string;
+    overviewBgColor: string;
   }
 }

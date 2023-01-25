@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   width: 100%;
@@ -8,12 +10,21 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: 500;
-  font-size: 1.2rem;
+
+  span {
+    margin-top: 1.5rem;
+    font-weight: 500;
+    font-size: 1.2rem;
+  }
 `;
 
 function Loading() {
-  return <Container>Loading...</Container>;
+  return (
+    <Container>
+      <FontAwesomeIcon icon={faSpinner} size="xl" spin />
+      <span>Loading...</span>
+    </Container>
+  );
 }
 
 export default Loading;

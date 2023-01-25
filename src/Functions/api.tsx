@@ -9,11 +9,21 @@ export const getCoinInfo = async (coinId: string) => {
 };
 
 export const getCoinPrice = async (coinId: string) => {
-  return (await fetch(`${BASE_URL}/tickers/${coinId}`)).json();
+  const response = await fetch(`${BASE_URL}/tickers/${coinId}`);
+  if (!response.ok) {
+    return Promise.reject(new Error("fail"));
+  } else {
+    return response.json();
+  }
 };
 
 export const getOhlcvByCoin = async (coinId: string) => {
-  return (
-    await fetch(`https://ohlcv-api.nomadcoders.workers.dev?coinId=${coinId}`)
-  ).json();
+  const response = await fetch(
+    `https://ohlcv-api.nomadcoders.workers.dev?coinId=${coinId}`
+  );
+  if (!response.ok) {
+    return Promise.reject(new Error("fail"));
+  } else {
+    return response.json();
+  }
 };
