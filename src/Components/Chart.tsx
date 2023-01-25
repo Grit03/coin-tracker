@@ -6,12 +6,16 @@ import Loading from "../Components/Loading";
 import ApexChart from "react-apexcharts";
 import { darkState } from "../atoms";
 import { useRecoilValue } from "recoil";
+import { useMediaQuery } from "react-responsive";
 
 function Chart() {
   const { coinId } = useOutletContext<IOutletCtx>();
   const { isLoading, isError, data } = useQuery<IOhlcv[]>({
     queryKey: [coinId, "ohlcv"],
     queryFn: () => getOhlcvByCoin(coinId),
+  });
+  const isMobile = useMediaQuery({
+    query: "(max-width:767px)",
   });
   const isDark = useRecoilValue(darkState);
   return (
@@ -54,7 +58,7 @@ function Chart() {
               },
             },
           }}
-          width={510}
+          width={isMobile ? 320 : 630}
           type="candlestick"
         />
       )}

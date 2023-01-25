@@ -110,3 +110,7 @@ export interface IOutletCtx {
 export interface IColorByNum {
   colorByNum?: number;
 }
+
+export interface IWithMediaQuery {
+  isMobile: boolean;
+}

@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Loading from "../Components/Loading";
 import { getCoins } from "../Functions/api";
-import { CoinInterface } from "../types/interfaces";
+import { CoinInterface, IWithMediaQuery } from "../types/interfaces";
+import { useMediaQuery } from "react-responsive";
 
 // Styeld Components
 const Container = styled.div`
@@ -24,27 +25,23 @@ const Title = styled.h1`
   margin-bottom: 4vh;
 `;
 
-const ListContainer = styled.ul`
-  width: 80%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-flow: row wrap;
-  margin: 0 auto;
+const ListContainer = styled.ul<IWithMediaQuery>`
+  width: ${({ isMobile }) => (isMobile ? "50%" : "80%")};
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 20px;
+  gap: 20px;
 `;
 
 const CoinList = styled.li`
-  margin: 0px 10px;
-  margin-bottom: 20px;
   text-align: center;
   box-sizing: content-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 200px;
   height: 200px;
-  border-radius: 7%;
+  border-radius: 20px;
   background-color: ${(props) => props.theme.containerColor};
   border: 2px solid ${(props) => props.theme.containerColor};
   transition: all 0.15s ease-in;
@@ -72,6 +69,9 @@ const Icon = styled.img`
 `;
 
 function Market() {
+  const isMobile = useMediaQuery({
+    query: "(max-width:767px)",
+  });
   const { isLoading, data } = useQuery<CoinInterface[]>({
     queryKey: ["allCoins"],
     queryFn: getCoins,
@@ -82,7 +82,7 @@ function Market() {
       {isLoading ? (
         <Loading />
       ) : (
-        <ListContainer>
+        <ListContainer isMobile={isMobile}>
           {data!.slice(0, 100).map((coin) => (
             <Link to={`/${coin.id}`} state={coin} key={coin.id}>
               <CoinList key={coin.id}>

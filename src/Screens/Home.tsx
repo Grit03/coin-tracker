@@ -1,5 +1,7 @@
+import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
+import { IWithMediaQuery } from "../types/interfaces";
 
 const floating = keyframes`
   from {
@@ -10,33 +12,34 @@ const floating = keyframes`
   }
 `;
 
-const Container = styled.section`
+const Container = styled.section<IWithMediaQuery>`
   width: 100%;
   height: 80%;
   margin-top: 11vh;
   display: flex;
+  flex-direction: ${({ isMobile }) => (isMobile ? "column-reverse" : "row")};
   align-items: center;
   justify-content: center;
   padding: 0px 10%;
 `;
 
-const Title = styled.header`
+const Title = styled.header<IWithMediaQuery>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 50%;
+  width: ${({ isMobile }) => (isMobile ? "300px" : "50%")};
   min-width: 150px;
   word-break: keep-all;
   text-align: center;
-  font-size: 2.3rem;
+  font-size: ${({ isMobile }) => (isMobile ? "1.8rem" : "2.3rem")};
   font-weight: 700;
   line-height: 1.5;
   margin-right: 20px;
 `;
 
-const Img = styled.img`
-  width: 400px;
+const Img = styled.img<IWithMediaQuery>`
+  width: ${({ isMobile }) => (isMobile ? "300px" : "400px")};
   min-width: 150px;
   animation: ${floating} 1.8s infinite ease-in-out alternate;
 `;
@@ -63,20 +66,23 @@ const Btn = styled.button`
 `;
 
 function Home() {
+  const isMobile = useMediaQuery({
+    query: "(max-width:767px)",
+  });
   const navigate = useNavigate();
   const onClick = () => {
     navigate("/market");
   };
   return (
     <>
-      <Container>
-        <Title>
+      <Container isMobile={isMobile}>
+        <Title isMobile={isMobile}>
           암호화폐를 구매하기 전에,
           <br />
           먼저 자세한 시세를 조회해보세요!
           <Btn onClick={onClick}>시세 조회 &rarr;</Btn>
         </Title>
-        <Img src="/coin-tracker/homepage.png" />
+        <Img isMobile={isMobile} src="/coin-tracker/homepage.png" />
       </Container>
     </>
   );

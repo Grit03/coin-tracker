@@ -61,7 +61,6 @@ function Price() {
     queryKey: [coinId, "coin-price"],
     queryFn: () => getCoinPrice(coinId!),
   });
-  const isDark = useRecoilValue(darkState);
   return (
     <>
       {isLoading ? (
@@ -86,7 +85,7 @@ function Price() {
               )}
               {` ${priceWithComma(
                 JSON.stringify(data.quotes.USD.percent_change_24h)
-              )} %`}
+              )}%`}
             </Highlight>
           </DataList>
 
@@ -103,7 +102,7 @@ function Price() {
               )}
               {` ${priceWithComma(
                 JSON.stringify(data.quotes.USD.percent_change_30d)
-              )} %`}
+              )}%`}
             </Highlight>
           </DataList>
 
@@ -119,14 +118,14 @@ function Price() {
               )}
               {` ${priceWithComma(
                 JSON.stringify(data.quotes.USD.percent_change_1y)
-              )} %`}
+              )}%`}
             </Highlight>
           </DataList>
 
           <DataList>
             <span>최고가</span>
             <Text>
-              {priceWithComma(JSON.stringify(data.quotes.USD.ath_price))} $
+              {priceWithComma(JSON.stringify(data.quotes.USD.ath_price))}$
             </Text>
           </DataList>
         </UnorderList>
